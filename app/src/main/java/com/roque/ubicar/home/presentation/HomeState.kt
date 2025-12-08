@@ -1,6 +1,6 @@
 package com.roque.ubicar.home.presentation
 
-import android.location.Location
+import com.roque.ubicar.home.domain.model.Location
 
 data class HomeState(
     val carStatus: CarStatus = CarStatus.NOT_PARKED,
