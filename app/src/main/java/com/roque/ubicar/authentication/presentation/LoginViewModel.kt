@@ -21,7 +21,12 @@ class LoginViewModel @Inject constructor(
         when (event) {
             is LoginEvent.SignIn -> {
                 viewModelScope.launch {
-                    repository.oneTapLogin()
+                    repository.oneTapLogin().onSuccess {
+                        state = state.copy(loginStatus = LoginStatus.LOGGED_IN)
+                    }.onFailure {
+                        state = state.copy(loginStatus = LoginStatus.IDLE)
+                        //TODO: Handle error
+                    }
                 }
             }
         }
