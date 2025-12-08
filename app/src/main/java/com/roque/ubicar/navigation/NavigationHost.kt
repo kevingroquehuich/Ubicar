@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.roque.ubicar.authentication.presentation.LoginScreen
+import com.roque.ubicar.home.presentation.HomeScreen
 
 @Composable
 fun NavigationHost(
@@ -21,6 +22,8 @@ fun NavigationHost(
             )
         }
 
-        composable(NavigationRoute.HomeScreen.route) {  }
+        composable(NavigationRoute.HomeScreen.route) {
+            HomeScreen()
+        }
     }
 }
