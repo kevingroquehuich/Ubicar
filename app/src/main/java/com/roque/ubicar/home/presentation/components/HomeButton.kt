@@ -27,7 +27,7 @@ fun HomeButton(
     onClick: () -> Unit,
     text: String,
     imageVector: ImageVector? = null,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     Button(
         onClick = { onClick() },
