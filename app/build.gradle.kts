@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -17,6 +19,17 @@ android {
         version = release(36)
     }
 
+    val localPropertiesFile = rootProject.file("local.properties")
+    val localProperties = Properties().apply {
+        load(FileInputStream(localPropertiesFile))
+    }
+
+    val googleMapsApiKey = localProperties.getProperty("GOOGLE_MAPS_API_KEY")
+        ?: throw IllegalStateException("Google Maps API key not found in local.properties")
+    val googleWebClientId = localProperties.getProperty("GOOGLE_WEB_CLIENT_ID")
+        ?: throw IllegalStateException("Google Web Client ID not found in local.properties")
+
+
     defaultConfig {
         applicationId = "com.roque.ubicar"
         minSdk = 26
@@ -25,6 +38,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "GOOGLE_MAPS_API_KEY", "\"$googleMapsApiKey\"")
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleWebClientId\"")
     }
 
     buildTypes {
@@ -47,6 +63,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
