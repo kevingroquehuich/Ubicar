@@ -1,4 +1,4 @@
-package com.roque.ubicar.home.data
+package com.roque.ubicar.home.data.repository
 
 import android.Manifest
 import android.content.Context
@@ -13,6 +13,7 @@ import com.google.android.gms.location.Priority
 import com.roque.ubicar.home.data.mapper.toDomain
 import com.roque.ubicar.home.domain.LocationService
 import com.roque.ubicar.home.domain.model.Location
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -46,6 +47,10 @@ class LocationServiceImpl(
         }
 
         locationClient.requestLocationUpdates(request, locationCallback!!, Looper.getMainLooper())
+
+        awaitClose {
+            stopLocationUpdates()
+        }
     }
 
     private fun hasLocationPermission(context: Context): Boolean {

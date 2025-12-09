@@ -29,9 +29,8 @@ fun HomeMap(
     LaunchedEffect(key1 = currentLocation) {
         currentLocation?.let {
             cameraPositionState.animate(
-                CameraUpdateFactory.newLatLngZoom(
-                    LatLng(it.latitude, it.longitude),
-                    17f
+                CameraUpdateFactory.newLatLng(
+                    LatLng(it.latitude, it.longitude)
                 )
             )
         }

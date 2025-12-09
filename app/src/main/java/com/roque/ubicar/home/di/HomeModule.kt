@@ -2,7 +2,7 @@ package com.roque.ubicar.home.di
 
 import android.content.Context
 import androidx.room.Room
-import com.roque.ubicar.home.data.LocationServiceImpl
+import com.roque.ubicar.home.data.repository.LocationServiceImpl
 import com.roque.ubicar.home.data.local.UbicarDatabase
 import com.roque.ubicar.home.data.local.dao.HomeDao
 import com.roque.ubicar.home.data.remote.GoogleDirectionsApi

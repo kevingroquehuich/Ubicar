@@ -10,6 +10,8 @@ import com.roque.ubicar.home.domain.LocationService
 import com.roque.ubicar.home.domain.model.Car
 import com.roque.ubicar.home.domain.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +22,8 @@ class HomeViewmodel @Inject constructor(
 ): ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
+
+    private lateinit var locationJob: Job
 
     init {
         viewModelScope.launch {
@@ -60,7 +64,7 @@ class HomeViewmodel @Inject constructor(
             HomeEvent.StartSearch -> {
 
                 state.car?.let { car ->
-                    viewModelScope.launch {
+                    locationJob = viewModelScope.launch {
                         val currentLocation = locationService.getCurrentLocation()
                         state = state.copy(
                             currentLocation = currentLocation
@@ -72,6 +76,10 @@ class HomeViewmodel @Inject constructor(
                                 destinationLocation = car.location
                             ).onSuccess {
                                 state = state.copy(route = it, carStatus = CarStatus.SEARCHING)
+
+                                locationService.getLocationUpdates().collectLatest {
+                                    state = state.copy(currentLocation = it)
+                                }
                             }.onFailure {
                                 //TODO: Handle error
                             }
@@ -86,6 +94,7 @@ class HomeViewmodel @Inject constructor(
                         repository.deleteCar(car)
                     }
                     state = state.copy(carStatus = CarStatus.NOT_PARKED, car = null, route = null)
+                    locationJob.cancel()
                 }
             }
         }
