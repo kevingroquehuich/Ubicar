@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -12,14 +11,17 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.roque.ubicar.home.domain.model.Location
+import com.roque.ubicar.home.domain.model.Route
 
 
 @Composable
 fun HomeMap(
     currentLocation: Location?,
     carLocation: Location?,
+    route: Route?,
     modifier: Modifier = Modifier
 ) {
     val cameraPositionState = rememberCameraPositionState()
@@ -50,6 +52,10 @@ fun HomeMap(
         carLocation?.let {
             CarMarker(position = it)
         }
+
+        route?.let { route ->
+            Polyline(points = route.polylines.map { LatLng(it.latitude, it.longitude) })
+        }
     }
 }
 
@@ -60,10 +66,4 @@ private fun CarMarker(position: Location) {
     }
 
     Marker(state = state)
-}
-
-@Preview
-@Composable
-fun HomeMapPreview() {
-    HomeMap(null, null)
 }

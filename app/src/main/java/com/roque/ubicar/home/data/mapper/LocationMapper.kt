@@ -18,3 +18,4 @@ fun LatLng.toLocation(): com.roque.ubicar.home.domain.model.Location{
 
     )
 }
+

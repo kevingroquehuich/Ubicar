@@ -4,5 +4,5 @@ data class Route(
     val distance: String,
     val duration: String,
     val paths: List<Path>,
-    val polyline: List<Location>,
+    val polylines: List<Location>,
 )

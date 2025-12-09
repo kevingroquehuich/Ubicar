@@ -32,6 +32,7 @@ fun HomeScreen(
             HomeMap(
                 currentLocation = state.currentLocation,
                 carLocation = state.car?.location,
+                route = state.route,
                 modifier = Modifier.fillMaxSize()
             )
 
