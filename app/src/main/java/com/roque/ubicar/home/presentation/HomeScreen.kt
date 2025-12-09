@@ -31,7 +31,7 @@ fun HomeScreen(
         ) {
             HomeMap(
                 currentLocation = state.currentLocation,
-                carLocation = null,
+                carLocation = state.car?.location,
                 modifier = Modifier.fillMaxSize()
             )
 

@@ -43,10 +43,11 @@ class HomeViewmodel @Inject constructor(
                         val car = Car(location = Location(currentLocation.latitude, currentLocation.longitude))
                         repository.parkCar(car)
                         val parkedCar = repository.getParkedCar()
-                        state = state.copy(car = parkedCar)
-
+                        state = state.copy(
+                            car = parkedCar,
+                            carStatus = CarStatus.PARKED
+                        )
                     }
-                    state = state.copy(carStatus = CarStatus.PARKED)
                 }
             }
 
@@ -59,7 +60,7 @@ class HomeViewmodel @Inject constructor(
                     viewModelScope.launch {
                         repository.deleteCar(car)
                     }
-                    state = state.copy(carStatus = CarStatus.NOT_PARKED)
+                    state = state.copy(carStatus = CarStatus.NOT_PARKED, car = null)
                 }
             }
         }
