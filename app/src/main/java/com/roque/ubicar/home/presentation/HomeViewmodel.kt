@@ -59,6 +59,17 @@ class HomeViewmodel @Inject constructor(
 
             HomeEvent.StartSearch -> {
                 state = state.copy(carStatus = CarStatus.SEARCHING)
+                state.currentLocation?.let { currentLocation ->
+                    state.car?.let { car ->
+                        viewModelScope.launch {
+                            val route = repository.getDirections(
+                                currentLocation = currentLocation,
+                                destinationLocation = car.location
+                            )
+                            print(route)
+                        }
+                    }
+                }
             }
 
             HomeEvent.StopSearch -> {

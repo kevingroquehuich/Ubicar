@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.roque.ubicar.home.data.LocationServiceImpl
 import com.roque.ubicar.home.data.local.UbicarDatabase
 import com.roque.ubicar.home.data.local.dao.HomeDao
+import com.roque.ubicar.home.data.remote.GoogleDirectionsApi
 import com.roque.ubicar.home.data.repository.HomeRepositoryImpl
 import com.roque.ubicar.home.domain.HomeRepository
 import com.roque.ubicar.home.domain.LocationService
@@ -13,6 +14,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -31,6 +39,35 @@ object HomeModule {
 
     @Provides
     @Singleton
-    fun provideHomeRepository(dao: HomeDao): HomeRepository = HomeRepositoryImpl(dao)
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDirectionsApi(client: OkHttpClient): GoogleDirectionsApi {
+        return Retrofit.Builder()
+            .baseUrl(GoogleDirectionsApi.BASE_URL)
+            .client(client)
+            .addConverterFactory(
+                Json {
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                    explicitNulls = false
+                }.asConverterFactory("application/json".toMediaType())
+            )
+            .build().create()
+}
+
+@Provides
+@Singleton
+fun provideHomeRepository(
+    dao: HomeDao,
+    api: GoogleDirectionsApi
+): HomeRepository = HomeRepositoryImpl(dao, api)
 
 }

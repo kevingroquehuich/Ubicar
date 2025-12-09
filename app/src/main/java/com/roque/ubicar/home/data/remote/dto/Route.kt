@@ -1,0 +1,23 @@
+package com.roque.ubicar.home.data.remote.dto
+
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Route(
+    @SerialName("bounds")
+    val bounds: Bounds,
+    @SerialName("copyrights")
+    val copyrights: String,
+    @SerialName("legs")
+    val legs: List<Leg>,
+    @SerialName("overview_polyline")
+    val overviewPolyline: OverviewPolyline,
+    @SerialName("summary")
+    val summary: String,
+    @SerialName("warnings")
+    val warnings: List<String>,
+    //@SerialName("waypoint_order")
+    //val waypointOrder: List<Any?>
+)
