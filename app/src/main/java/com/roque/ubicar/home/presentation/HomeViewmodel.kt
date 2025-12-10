@@ -110,6 +110,10 @@ class HomeViewmodel @Inject constructor(
                     locationJob.cancel()
                 }
             }
+
+            is HomeEvent.PermissionResult -> {
+                state = state.copy(hasRequiredPermissions = event.isPermissionsGranted)
+            }
         }
     }
 }

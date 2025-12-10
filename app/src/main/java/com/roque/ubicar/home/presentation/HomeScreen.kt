@@ -15,6 +15,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.roque.ubicar.home.presentation.components.HomeButton
 import com.roque.ubicar.home.presentation.components.HomeDirectionsInfo
 import com.roque.ubicar.home.presentation.components.HomeMap
+import com.roque.ubicar.home.presentation.components.HomePermissions
 
 @Composable
 fun HomeScreen(
@@ -24,56 +25,68 @@ fun HomeScreen(
     val state = viewmodel.state
 
     Scaffold(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
-            HomeMap(
-                currentLocation = state.currentLocation,
-                carLocation = state.car?.location,
-                route = state.route,
-                modifier = Modifier.fillMaxSize()
-            )
 
-            when(state.carStatus) {
-                CarStatus.NOT_PARKED -> {
-                    HomeButton(
-                        onClick = { viewmodel.onEvent(HomeEvent.SaveCar) },
-                        text = "Park Here",
-                        imageVector = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 64.dp)
-                            .padding(horizontal = 16.dp)
-                    )
+        if (!state.hasRequiredPermissions) {
+            HomePermissions(
+                permissions = listOf(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                onPermissionResult = { isGranted ->
+                    viewmodel.onEvent(HomeEvent.PermissionResult(isGranted))
                 }
-                CarStatus.PARKED -> {
-                    HomeButton(
-                        onClick = { viewmodel.onEvent(HomeEvent.StartSearch) },
-                        text = "Get directions",
-                        imageVector = Icons.Outlined.Directions,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 64.dp)
-                            .padding(horizontal = 16.dp)
-                    )
-                }
-                CarStatus.SEARCHING -> {
-                    HomeDirectionsInfo(
-                        onClick = { viewmodel.onEvent(HomeEvent.StopSearch) },
-                        distance = "1.5 km away",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 64.dp)
-                            .padding(horizontal = 16.dp)
-                    )
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                HomeMap(
+                    currentLocation = state.currentLocation,
+                    carLocation = state.car?.location,
+                    route = state.route,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                when(state.carStatus) {
+                    CarStatus.NOT_PARKED -> {
+                        HomeButton(
+                            onClick = { viewmodel.onEvent(HomeEvent.SaveCar) },
+                            text = "Park Here",
+                            imageVector = null,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 64.dp)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
+                    CarStatus.PARKED -> {
+                        HomeButton(
+                            onClick = { viewmodel.onEvent(HomeEvent.StartSearch) },
+                            text = "Get directions",
+                            imageVector = Icons.Outlined.Directions,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 64.dp)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
+                    CarStatus.SEARCHING -> {
+                        HomeDirectionsInfo(
+                            onClick = { viewmodel.onEvent(HomeEvent.StopSearch) },
+                            distance = "1.5 km away",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = 64.dp)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
                 }
             }
-
         }
     }
 
