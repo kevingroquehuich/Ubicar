@@ -9,6 +9,7 @@ import com.roque.ubicar.home.domain.HomeRepository
 import com.roque.ubicar.home.domain.LocationService
 import com.roque.ubicar.home.domain.model.Car
 import com.roque.ubicar.home.domain.model.Location
+import com.roque.ubicar.home.domain.usecase.GetPathToCarUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewmodel @Inject constructor(
     private val locationService: LocationService,
-    private val repository: HomeRepository
+    private val repository: HomeRepository,
+    private val getPathToCarUseCase: GetPathToCarUseCase
 ): ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
@@ -70,15 +72,26 @@ class HomeViewmodel @Inject constructor(
                             currentLocation = currentLocation
                         )
 
-                        currentLocation?.let { current ->
+                        state.currentLocation?.let { currentLocation ->
                             repository.getDirections(
-                                currentLocation = current,
+                                currentLocation = currentLocation,
                                 destinationLocation = car.location
                             ).onSuccess {
                                 state = state.copy(route = it, carStatus = CarStatus.SEARCHING)
 
                                 locationService.getLocationUpdates().collectLatest {
                                     state = state.copy(currentLocation = it)
+                                    if (state.currentLocation != null && state.route != null) {
+                                        getPathToCarUseCase(
+                                            currentLocation = state.currentLocation!!,
+                                            destinationLocation = car.location,
+                                            route = state.route!!
+                                        ).onSuccess {
+                                            state = state.copy(route = it)
+                                        }.onFailure {
+
+                                        }
+                                    }
                                 }
                             }.onFailure {
                                 //TODO: Handle error

@@ -9,6 +9,7 @@ import com.roque.ubicar.home.data.remote.GoogleDirectionsApi
 import com.roque.ubicar.home.data.repository.HomeRepositoryImpl
 import com.roque.ubicar.home.domain.HomeRepository
 import com.roque.ubicar.home.domain.LocationService
+import com.roque.ubicar.home.domain.usecase.GetPathToCarUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,13 +62,18 @@ object HomeModule {
                 }.asConverterFactory("application/json".toMediaType())
             )
             .build().create()
-}
+    }
 
-@Provides
-@Singleton
-fun provideHomeRepository(
-    dao: HomeDao,
-    api: GoogleDirectionsApi
-): HomeRepository = HomeRepositoryImpl(dao, api)
+    @Provides
+    @Singleton
+    fun provideHomeRepository(
+        dao: HomeDao,
+        api: GoogleDirectionsApi
+    ): HomeRepository = HomeRepositoryImpl(dao, api)
+
+    @Provides
+    @Singleton
+    fun provideGetPathToCarUseCase(repository: HomeRepository): GetPathToCarUseCase =
+        GetPathToCarUseCase(repository)
 
 }
