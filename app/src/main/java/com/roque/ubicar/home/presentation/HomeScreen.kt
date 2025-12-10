@@ -77,7 +77,7 @@ fun HomeScreen(
                     CarStatus.SEARCHING -> {
                         HomeDirectionsInfo(
                             onClick = { viewmodel.onEvent(HomeEvent.StopSearch) },
-                            distance = "1.5 km away",
+                            distance = meterToText(state.route?.distance),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .align(Alignment.BottomCenter)

@@ -3,7 +3,6 @@ package com.roque.ubicar.home.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,7 +25,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HomeDirectionsInfo(
     onClick: () -> Unit,
-    distance: String,
+    distance: String?,
     modifier: Modifier
 ) {
 
@@ -46,32 +45,34 @@ fun HomeDirectionsInfo(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Your Vehicle",
-                    color = Color.Gray,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Row {
-                    Icon(
-                        imageVector = Icons.Outlined.Route,
-                        contentDescription = "",
-                        tint = Color.Red,
-                        modifier = Modifier.size(24.dp)
-                    )
+            distance?.let {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Text(
-                        text = distance,
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        text = "Your Vehicle",
+                        color = Color.Gray,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
-                }
 
+                    Row {
+                        Icon(
+                            imageVector = Icons.Outlined.Route,
+                            contentDescription = "",
+                            tint = Color.Red,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Text(
+                            text = "$it away",
+                            color = Color.Black,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
             }
+
 
             HomeButton(
                 onClick = { onClick() },

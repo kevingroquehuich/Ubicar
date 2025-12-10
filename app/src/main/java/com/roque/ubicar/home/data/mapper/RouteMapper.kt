@@ -25,7 +25,7 @@ fun DirectionsResponse.toRoute(): Route {
     }
 
     return Route(
-        distance = firstLeg.distance.text,
+        distance = firstLeg.distance.value,
         duration = firstLeg.duration.text,
         paths = paths,
         polylines = routePoints.map { it.toLocation() }

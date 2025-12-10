@@ -5,6 +5,7 @@ import com.google.maps.android.ktx.utils.isLocationOnPath
 import com.roque.ubicar.home.domain.HomeRepository
 import com.roque.ubicar.home.domain.model.Location
 import com.roque.ubicar.home.domain.model.Route
+import kotlin.math.roundToInt
 
 class GetPathToCarUseCase(
     private val repository: HomeRepository
@@ -28,7 +29,11 @@ class GetPathToCarUseCase(
 
         return if (isOnRoute) {
             val newPolylines = route.polylines.drop(closestIndex)
-            Result.success(route.copy(polylines = newPolylines))
+            val distance = calculateDistanceBetweenLocations(currentLocation, newPolylines.last())
+            Result.success(route.copy(
+                polylines = newPolylines,
+                distance = distance.roundToInt()
+            ))
         } else {
             repository.getDirections(currentLocation, destinationLocation)
         }
