@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">UbiCar</string>
+    <string name="park_here">Park Here</string>
+    <string name="get_directions">Get directions</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="txt_your_vehicle">Your Vehicle</string>
+    <string name="distance">%1$s away</string>
+    <string name="stop_searching">Stop Searching</string>
+    <string name="google_logo">Google Logo</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="accept">Accept</string>
+    <string name="we_need_your_location_for_the_app_work_correctly">We need your location for the app work correctly.</string>
+    <string name="open_app_settings">Open App Settings</string>
 </resources>

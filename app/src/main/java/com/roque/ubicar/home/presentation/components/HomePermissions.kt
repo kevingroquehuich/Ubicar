@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.roque.ubicar.R
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -36,14 +38,14 @@ fun HomePermissions(
             confirmButton = {
                 HomeButton(
                     onClick = { permissionsState.launchMultiplePermissionRequest() },
-                    text = "OK"
+                    text = stringResource(R.string.accept)
                 )
             },
             title = {
-                Text(text = "Permission Required")
+                Text(text = stringResource(R.string.permission_required))
             },
             text = {
-                Text(text = "We need your location for the app work correctly.")
+                Text(text = stringResource(R.string.we_need_your_location_for_the_app_work_correctly))
             }
         )
     }else {
@@ -51,7 +53,7 @@ fun HomePermissions(
             modifier = Modifier.fillMaxSize()
         ) {
             val context = LocalContext.current
-            Text(text = "We need your location for the app work correctly.")
+            Text(text = stringResource(R.string.we_need_your_location_for_the_app_work_correctly))
             HomeButton(
                 onClick = {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -59,7 +61,7 @@ fun HomePermissions(
                     }
                     context.startActivity(intent)
                 },
-                text = "Open App Settings"
+                text = stringResource(R.string.open_app_settings)
             )
         }
     }

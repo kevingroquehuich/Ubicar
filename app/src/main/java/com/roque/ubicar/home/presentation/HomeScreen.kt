@@ -10,8 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.roque.ubicar.R
 import com.roque.ubicar.home.presentation.components.HomeButton
 import com.roque.ubicar.home.presentation.components.HomeDirectionsInfo
 import com.roque.ubicar.home.presentation.components.HomeMap
@@ -53,7 +55,7 @@ fun HomeScreen(
                     CarStatus.NOT_PARKED -> {
                         HomeButton(
                             onClick = { viewmodel.onEvent(HomeEvent.SaveCar) },
-                            text = "Park Here",
+                            text = stringResource(R.string.park_here),
                             imageVector = null,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -65,7 +67,7 @@ fun HomeScreen(
                     CarStatus.PARKED -> {
                         HomeButton(
                             onClick = { viewmodel.onEvent(HomeEvent.StartSearch) },
-                            text = "Get directions",
+                            text = stringResource(R.string.get_directions),
                             imageVector = Icons.Outlined.Directions,
                             modifier = Modifier
                                 .fillMaxWidth()
