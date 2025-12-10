@@ -19,8 +19,6 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 fun HomePermissions(
     permissions: List<String>,
     onPermissionResult: (Boolean) -> Unit,
-    //grantedContent: @Composable () -> Unit,
-    //deniedContent: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val permissionsState = rememberMultiplePermissionsState(permissions = permissions)
