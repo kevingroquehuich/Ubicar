@@ -28,17 +28,20 @@ class HomeViewmodel @Inject constructor(
     private lateinit var locationJob: Job
 
     init {
-        viewModelScope.launch {
-            locationService.getCurrentLocation()?.let {
-                state = state.copy(currentLocation = it)
-            }
-        }
-
+        getCurrentLocation()
          viewModelScope.launch {
              repository.getParkedCar()?.let {
                  state = state.copy(car = it, carStatus = CarStatus.PARKED)
              }
          }
+    }
+
+    private fun getCurrentLocation() {
+        viewModelScope.launch {
+            locationService.getCurrentLocation()?.let {
+                state = state.copy(currentLocation = it)
+            }
+        }
     }
 
     fun onEvent(event: HomeEvent) {
@@ -113,6 +116,7 @@ class HomeViewmodel @Inject constructor(
 
             is HomeEvent.PermissionResult -> {
                 state = state.copy(hasRequiredPermissions = event.isPermissionsGranted)
+                if (event.isPermissionsGranted) getCurrentLocation()
             }
         }
     }
