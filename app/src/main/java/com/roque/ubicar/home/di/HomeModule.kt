@@ -2,6 +2,7 @@ package com.roque.ubicar.home.di
 
 import android.content.Context
 import androidx.room.Room
+import com.roque.ubicar.home.data.distance.DistanceCalculatorImpl
 import com.roque.ubicar.home.data.repository.LocationServiceImpl
 import com.roque.ubicar.home.data.local.UbicarDatabase
 import com.roque.ubicar.home.data.local.dao.HomeDao
@@ -9,6 +10,7 @@ import com.roque.ubicar.home.data.remote.GoogleDirectionsApi
 import com.roque.ubicar.home.data.repository.HomeRepositoryImpl
 import com.roque.ubicar.home.domain.HomeRepository
 import com.roque.ubicar.home.domain.LocationService
+import com.roque.ubicar.home.domain.distance.DistanceCalculator
 import com.roque.ubicar.home.domain.usecase.GetPathToCarUseCase
 import dagger.Module
 import dagger.Provides
@@ -73,7 +75,14 @@ object HomeModule {
 
     @Provides
     @Singleton
-    fun provideGetPathToCarUseCase(repository: HomeRepository): GetPathToCarUseCase =
-        GetPathToCarUseCase(repository)
+    fun provideDistanceCalculator(): DistanceCalculator = DistanceCalculatorImpl()
+
+    @Provides
+    @Singleton
+    fun provideGetPathToCarUseCase(
+        repository: HomeRepository,
+        distanceCalculator: DistanceCalculator
+    ): GetPathToCarUseCase =
+        GetPathToCarUseCase(repository, distanceCalculator)
 
 }
