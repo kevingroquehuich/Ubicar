@@ -1,19 +1,17 @@
 package com.roque.ubicar.authentication.presentation.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.roque.ubicar.R
+import com.roque.ubicar.ui.theme.UbiCarTheme
 
 @Composable
 fun LoginWithGoogleButton(
@@ -28,39 +27,47 @@ fun LoginWithGoogleButton(
     text: String,
     modifier: Modifier
 ) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(70.dp))
-            .background(Color.Yellow)
-            .clickable { onClick() }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_google_logo),
-            contentDescription = stringResource(R.string.google_logo)
-        )
 
-        Text(
-            text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         )
-        Icon(
-            painter = painterResource(id = R.drawable.ic_google_logo),
-            contentDescription = stringResource(R.string.google_logo),
-            tint = Color.Yellow
-        )
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_google_logo),
+                contentDescription = stringResource(R.string.google_logo)
+            )
+            Text(
+                text = text,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_google_logo),
+                contentDescription = stringResource(R.string.google_logo),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
     }
+
 }
 
 @Preview
 @Composable
 fun LoginWithGoogleButtonPreview() {
-    LoginWithGoogleButton(
-        onClick = {},
-        text = stringResource(R.string.continue_with_google),
-        modifier = Modifier.fillMaxWidth()
-    )
+    UbiCarTheme(darkTheme = true) {
+        LoginWithGoogleButton(
+            onClick = {},
+            text = stringResource(R.string.continue_with_google),
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }

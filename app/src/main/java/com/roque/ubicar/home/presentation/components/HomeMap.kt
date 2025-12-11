@@ -2,11 +2,11 @@ package com.roque.ubicar.home.presentation.components
 
 import android.content.Context
 import android.graphics.Canvas
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
@@ -70,7 +70,7 @@ fun HomeMap(
         route?.let { route ->
             Polyline(
                 points = route.polylines.map { LatLng(it.latitude, it.longitude) },
-                color = Color(color = 0XFFFFB403)
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
