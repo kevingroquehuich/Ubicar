@@ -21,7 +21,7 @@ class HomeViewmodel @Inject constructor(
     private val locationService: LocationService,
     private val repository: HomeRepository,
     private val getPathToCarUseCase: GetPathToCarUseCase
-): ViewModel() {
+) : ViewModel() {
     var state by mutableStateOf(HomeState())
         private set
 
@@ -29,11 +29,11 @@ class HomeViewmodel @Inject constructor(
 
     init {
         getCurrentLocation()
-         viewModelScope.launch {
-             repository.getParkedCar()?.let {
-                 state = state.copy(car = it, carStatus = CarStatus.PARKED)
-             }
-         }
+        viewModelScope.launch {
+            repository.getParkedCar()?.let {
+                state = state.copy(car = it, carStatus = CarStatus.PARKED)
+            }
+        }
     }
 
     private fun getCurrentLocation() {
@@ -45,7 +45,7 @@ class HomeViewmodel @Inject constructor(
     }
 
     fun onEvent(event: HomeEvent) {
-        when(event) {
+        when (event) {
             is HomeEvent.SaveCar -> {
 
                 viewModelScope.launch {
@@ -83,20 +83,33 @@ class HomeViewmodel @Inject constructor(
                             ).onSuccess {
                                 state = state.copy(route = it, carStatus = CarStatus.SEARCHING)
 
-                                locationService.getLocationUpdates().collectLatest {
-                                    state = state.copy(currentLocation = it)
-                                    if (state.currentLocation != null && state.route != null) {
-                                        getPathToCarUseCase(
-                                            currentLocation = state.currentLocation!!,
-                                            destinationLocation = car.location,
-                                            route = state.route!!
-                                        ).onSuccess {
-                                            state = state.copy(route = it)
-                                        }.onFailure {
-                                            state = state.copy(errorMessage = it.message ?: "Error calculating route")
-                                        }
-                                    }
-                                }
+                               locationService.getLocationUpdates().collectLatest { location ->
+                                   state = state.copy(currentLocation = location)
+                                   if (state.currentLocation != null && state.route != null) {
+                                       getPathToCarUseCase(
+                                           currentLocation = state.currentLocation!!,
+                                           destinationLocation = car.location,
+                                           route = state.route!!
+                                       ).onSuccess { updatedRoute ->
+                                           state = state.copy(route = updatedRoute)
+
+                                           if (updatedRoute.distance < 5) {
+                                               viewModelScope.launch {
+                                                   repository.deleteCar(car)
+                                               }
+                                               state = state.copy(
+                                                   carStatus = CarStatus.NOT_PARKED,
+                                                   car = null,
+                                                   route = null,
+                                                   errorMessage = "You've arrived at your vehicle!" //TODO: Actualizar mensaje exitoso
+                                               )
+                                               locationJob?.cancel()
+                                           }
+                                       }.onFailure { error ->
+                                           state = state.copy(errorMessage = error.message ?: "Error calculating route")
+                                       }
+                                   }
+                               }
                             }.onFailure {
                                 state = state.copy(errorMessage = it.message ?: "Error calculating route")
                             }
