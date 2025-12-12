@@ -1,6 +1,5 @@
 package com.roque.ubicar.home.data.repository
 
-import com.roque.ubicar.BuildConfig
 import com.roque.ubicar.home.data.extension.resultOf
 import com.roque.ubicar.home.data.local.dao.HomeDao
 import com.roque.ubicar.home.data.mapper.toDomain
@@ -33,10 +32,9 @@ class HomeRepositoryImpl(
     ): Result<Route> {
         val origin = "${currentLocation.latitude},${currentLocation.longitude}"
         val destination = "${destinationLocation.latitude},${destinationLocation.longitude}"
-        val apiKey = BuildConfig.GOOGLE_MAPS_API_KEY
 
         return resultOf {
-            api.getDirections(origin, destination, "walking", apiKey).toRoute()
+            api.getDirections(origin, destination, "walking").toRoute()
         }
     }
 }

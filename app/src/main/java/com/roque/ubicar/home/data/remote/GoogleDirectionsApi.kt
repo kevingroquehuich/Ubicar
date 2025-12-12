@@ -13,7 +13,6 @@ interface GoogleDirectionsApi {
     suspend fun getDirections(
         @Query("origin") origin: String,
         @Query("destination") destination: String,
-        @Query("mode") mode: String,
-        @Query("key") apiKey: String //TODO: Add to interceptor
+        @Query("mode") mode: String
     ): DirectionsResponse
 }

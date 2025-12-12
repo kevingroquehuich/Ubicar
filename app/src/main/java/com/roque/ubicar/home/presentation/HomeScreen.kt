@@ -98,7 +98,7 @@ fun HomeScreen(
                                 cameraPositionState.animate(
                                     CameraUpdateFactory.newLatLngZoom(
                                         LatLng(it.latitude, it.longitude),
-                                        18f // Assuming 18f is a good zoom level for "My Location"
+                                        18f
                                     )
                                 )
                             }
