@@ -15,13 +15,13 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
-import com.google.maps.android.compose.rememberCameraPositionState
 import com.roque.ubicar.R
 import com.roque.ubicar.home.domain.model.Location
 import com.roque.ubicar.home.domain.model.Route
@@ -32,9 +32,9 @@ fun HomeMap(
     currentLocation: Location?,
     carLocation: Location?,
     route: Route?,
+    cameraPositionState: CameraPositionState,
     modifier: Modifier = Modifier
 ) {
-    val cameraPositionState = rememberCameraPositionState()
     val context = LocalContext.current
     val mapStyle = remember {
         MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style)
@@ -59,7 +59,8 @@ fun HomeMap(
             mapStyleOptions = mapStyle
         ),
         uiSettings = MapUiSettings(
-            zoomControlsEnabled = false
+            zoomControlsEnabled = false,
+            myLocationButtonEnabled = false
         ),
         cameraPositionState = cameraPositionState
     ) {
