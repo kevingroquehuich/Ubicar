@@ -25,14 +25,19 @@ class LocationServiceImpl(
     private val locationClient = LocationServices.getFusedLocationProviderClient(context)
     private var locationCallback: LocationCallback? = null
 
-    override fun getLocationUpdates(distanceToDestination: Float): Flow<Location?> = callbackFlow {
+    override fun getLocationUpdates(): Flow<Location?> = callbackFlow {
         if (!hasLocationPermission(context)) {
             trySend(null)
             close()
             return@callbackFlow
         }
 
-        val request = buildLocationRequest(distanceToDestination)
+        val request = LocationRequest.Builder(1000)
+            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+            .setWaitForAccurateLocation(false)
+            .setMinUpdateDistanceMeters(5f)
+            .setMaxUpdateDelayMillis(1000)
+            .build()
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
@@ -46,21 +51,6 @@ class LocationServiceImpl(
 
         awaitClose {
             stopLocationUpdates()
-        }
-    }
-
-    private fun buildLocationRequest(distanceToDestination: Float): LocationRequest {
-        return if (distanceToDestination > 100f) {
-            LocationRequest.Builder(30000L)
-                .setPriority(Priority.PRIORITY_BALANCED_POWER_ACCURACY)
-                .setMinUpdateDistanceMeters(10f)
-                .build()
-        } else {
-            LocationRequest.Builder(10000L)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .setWaitForAccurateLocation(true)
-                .setMinUpdateDistanceMeters(5f)
-                .build()
         }
     }
 

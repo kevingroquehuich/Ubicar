@@ -20,8 +20,6 @@ class GetPathToCarUseCase(
         destinationLocation: Location,
         route: Route
     ): Result<Route> {
-        // Dynamic threshold based on GPS accuracy
-        // If accuracy is poor, increase threshold to avoid GPS jitter recalculations
         val threshold = if (currentLocation.accuracy < 10f) {
             BASE_THRESHOLD_METERS
         } else {

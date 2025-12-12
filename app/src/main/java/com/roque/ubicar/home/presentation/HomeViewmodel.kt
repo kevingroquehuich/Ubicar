@@ -11,10 +11,8 @@ import com.roque.ubicar.home.domain.model.Car
 import com.roque.ubicar.home.domain.model.Location
 import com.roque.ubicar.home.domain.usecase.GetPathToCarUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,7 +44,6 @@ class HomeViewmodel @Inject constructor(
         }
     }
 
-    @OptIn(FlowPreview::class)
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.SaveCar -> {
@@ -86,10 +83,7 @@ class HomeViewmodel @Inject constructor(
                             ).onSuccess { initialRoute ->
                                 state = state.copy(route = initialRoute, carStatus = CarStatus.SEARCHING)
 
-                                val distanceToDestination = initialRoute.distance.toFloat()
-
-                                locationService.getLocationUpdates(distanceToDestination)
-                                    .debounce(500)
+                                locationService.getLocationUpdates()
                                     .collectLatest { location ->
                                         state = state.copy(currentLocation = location)
                                         if (state.currentLocation != null && state.route != null) {
