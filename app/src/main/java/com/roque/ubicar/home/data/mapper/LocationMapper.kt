@@ -7,7 +7,8 @@ fun Location.toDomain(): com.roque.ubicar.home.domain.model.Location {
     return com.roque.ubicar.home.domain.model.Location(
         latitude = this.latitude,
         longitude = this.longitude,
-        accuracy = if (this.hasAccuracy()) this.accuracy else 10f
+        accuracy = if (this.hasAccuracy()) this.accuracy else 10f,
+        bearing = if (this.hasBearing()) this.bearing else 0f
     )
 }
 

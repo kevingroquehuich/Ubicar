@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
@@ -53,7 +54,7 @@ fun HomeMap(
     GoogleMap(
         modifier = modifier,
         properties = MapProperties(
-            isMyLocationEnabled = true,
+            isMyLocationEnabled = false,
             maxZoomPreference = 20f,
             minZoomPreference = 15f,
             mapStyleOptions = mapStyle
@@ -64,6 +65,10 @@ fun HomeMap(
         ),
         cameraPositionState = cameraPositionState
     ) {
+        currentLocation?.let {
+            CurrentLocationMarker(location = it)
+        }
+
         carLocation?.let {
             CarMarker(position = it)
         }
@@ -78,6 +83,26 @@ fun HomeMap(
 }
 
 @Composable
+private fun CurrentLocationMarker(location: Location) {
+    val context = LocalContext.current
+    val position = remember(location.latitude, location.longitude) {
+        LatLng(location.latitude, location.longitude)
+    }
+
+    Marker(
+        state = MarkerState(position),
+        anchor = Offset(0.5f, 0.5f),
+        rotation = location.bearing,
+        icon = bitmapDescriptorFromVector(
+            context = context,
+            imageId = R.drawable.ic_navigation_arrow,
+            tintColor = MaterialTheme.colorScheme.primary.hashCode()
+        ),
+        flat = true
+    )
+}
+
+@Composable
 private fun CarMarker(position: Location) {
     val context = LocalContext.current
 
@@ -87,12 +112,25 @@ private fun CarMarker(position: Location) {
 
     Marker(
         state = state,
-        icon = bitmapDescriptorFromVector(context, R.drawable.ic_marker)
+        icon = bitmapDescriptorFromVector(
+            context = context,
+            imageId = R.drawable.ic_marker,
+            tintColor = MaterialTheme.colorScheme.primary.hashCode()
+        )
     )
 }
 
-private fun bitmapDescriptorFromVector(context: Context, imageId: Int): BitmapDescriptor? {
+private fun bitmapDescriptorFromVector(
+    context: Context, 
+    imageId: Int,
+    tintColor: Int? = null
+): BitmapDescriptor? {
     val vectorDrawable = ContextCompat.getDrawable(context, imageId) ?: return null
+    
+    tintColor?.let {
+        vectorDrawable.setTint(it)
+    }
+    
     vectorDrawable.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
     val bitmap = createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
     val canvas = Canvas(bitmap)

@@ -24,23 +24,22 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
-import com.roque.ubicar.R
 import com.google.maps.android.compose.rememberCameraPositionState
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
+import com.roque.ubicar.R
 import com.roque.ubicar.home.presentation.components.HomeButton
 import com.roque.ubicar.home.presentation.components.HomeDirectionsInfo
 import com.roque.ubicar.home.presentation.components.HomeMap
 import com.roque.ubicar.home.presentation.components.HomePermissions
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -170,12 +169,13 @@ private fun MapControls(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF2B2B2B))
+            .background(MaterialTheme.colorScheme.surface)
     ) {
         IconButton(
             onClick = { },
             colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.onSurface
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Icon(
@@ -186,7 +186,8 @@ private fun MapControls(
         IconButton(
             onClick = { myLocationOnClick() },
             colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.onSurface
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Icon(
@@ -206,13 +207,14 @@ private fun MapZoomControls(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF2B2B2B)),
+            .background(MaterialTheme.colorScheme.surface),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
             onClick = { zoomInOnClick() },
             colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.onSurface
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Icon(
@@ -223,7 +225,8 @@ private fun MapZoomControls(
         IconButton(
             onClick = { zoomOutOnClick() },
             colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.onSurface
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
             Icon(
