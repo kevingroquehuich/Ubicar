@@ -2,20 +2,26 @@ package com.roque.ubicar.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Light Theme Colors
-val UbicarYellow = Color(0xFFFFC107) // Amber 500 - High visibility for primary actions
-val UbicarBlue = Color(0xFF1976D2)   // Blue 700 - Standard navigation/map color
-val UbicarGreen = Color(0xFF388E3C)  // Green 700 - Success/Go
+// Modern Navy & Teal Palette
 
-// Dark Theme Colors
-val UbicarYellowDark = Color(0xFFFFD54F) // Amber 300 - Softer for dark mode
-val UbicarBlueDark = Color(0xFF64B5F6)   // Blue 300
-val UbicarGreenDark = Color(0xFF81C784)  // Green 300
+// Primary - Deep Navy
+val NavyPrimary = Color(0xFF0D1B2A)
+val NavySecondary = Color(0xFF1B263B)
+val NavyTertiary = Color(0xFF415A77)
 
-// Neutrals
-val NeutralLight = Color(0xFFFFFBFE)
-val NeutralDark = Color(0xFF121212)
-val SurfaceDark = Color(0xFF1E1E1E)
+// Accent - Vibrant Teal
+val TealAccent = Color(0xFF00B4D8)
+val TealLight = Color(0xFF90E0EF)
+
+// Neutral / Background
+val OffWhite = Color(0xFFF8F9FA)
+val PureWhite = Color(0xFFFFFFFF)
+val SlateGray = Color(0xFF778DA9)
+val DarkBackground = Color(0xFF0D1B2A) // Matches primary for immersive dark mode
+
+// Semantic
+val SuccessGreen = Color(0xFF2EC4B6)
+val ErrorRed = Color(0xFFE63946)
 
 val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)

@@ -66,41 +66,37 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxSize()
                 )
 
-                when(state.carStatus) {
-                    CarStatus.NOT_PARKED -> {
-                        HomeButton(
-                            onClick = { viewmodel.onEvent(HomeEvent.SaveCar) },
-                            text = stringResource(R.string.park_here),
-                            imageVector = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 64.dp)
-                                .padding(horizontal = 16.dp)
-                        )
-                    }
-                    CarStatus.PARKED -> {
-                        HomeButton(
-                            onClick = { viewmodel.onEvent(HomeEvent.StartSearch) },
-                            text = stringResource(R.string.get_directions),
-                            imageVector = Icons.Outlined.Directions,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 64.dp)
-                                .padding(horizontal = 16.dp)
-                        )
-                    }
-                    CarStatus.SEARCHING -> {
-                        HomeDirectionsInfo(
-                            onClick = { viewmodel.onEvent(HomeEvent.StopSearch) },
-                            distance = meterToText(state.route?.distance),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                                .padding(bottom = 64.dp)
-                                .padding(horizontal = 16.dp)
-                        )
+                // Overlay Controls
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(bottom = 32.dp, start = 16.dp, end = 16.dp)
+                ) {
+                    when(state.carStatus) {
+                        CarStatus.NOT_PARKED -> {
+                            HomeButton(
+                                onClick = { viewmodel.onEvent(HomeEvent.SaveCar) },
+                                text = stringResource(R.string.park_here),
+                                imageVector = null, // Or add a parking icon if desired
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        CarStatus.PARKED -> {
+                            HomeButton(
+                                onClick = { viewmodel.onEvent(HomeEvent.StartSearch) },
+                                text = stringResource(R.string.get_directions),
+                                imageVector = Icons.Outlined.Directions,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        CarStatus.SEARCHING -> {
+                            HomeDirectionsInfo(
+                                onClick = { viewmodel.onEvent(HomeEvent.StopSearch) },
+                                distance = meterToText(state.route?.distance),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
             }
