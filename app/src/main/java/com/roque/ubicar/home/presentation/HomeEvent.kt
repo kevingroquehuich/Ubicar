@@ -5,4 +5,5 @@ sealed interface HomeEvent {
     data object StartSearch: HomeEvent
     data object StopSearch: HomeEvent
     data class PermissionResult(val isPermissionsGranted: Boolean): HomeEvent
+    data object ErrorSeen: HomeEvent
 }

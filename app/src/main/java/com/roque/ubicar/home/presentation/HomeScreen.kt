@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Directions
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,8 +29,19 @@ fun HomeScreen(
 ) {
 
     val state = viewmodel.state
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(modifier = Modifier.fillMaxSize()) {
+    LaunchedEffect(state.errorMessage) {
+        state.errorMessage?.let { error ->
+            snackbarHostState.showSnackbar(error)
+            viewmodel.onEvent(HomeEvent.ErrorSeen)
+        }
+    }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
 
         if (!state.hasRequiredPermissions) {
             HomePermissions(
@@ -42,7 +57,7 @@ fun HomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
+                    .padding(paddingValues)
             ) {
                 HomeMap(
                     currentLocation = state.currentLocation,
@@ -91,5 +106,4 @@ fun HomeScreen(
             }
         }
     }
-
 }

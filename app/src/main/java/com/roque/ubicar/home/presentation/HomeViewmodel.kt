@@ -25,7 +25,7 @@ class HomeViewmodel @Inject constructor(
     var state by mutableStateOf(HomeState())
         private set
 
-    private lateinit var locationJob: Job
+    private var locationJob: Job? = null
 
     init {
         getCurrentLocation()
@@ -69,6 +69,7 @@ class HomeViewmodel @Inject constructor(
             HomeEvent.StartSearch -> {
 
                 state.car?.let { car ->
+                    locationJob?.cancel()
                     locationJob = viewModelScope.launch {
                         val currentLocation = locationService.getCurrentLocation()
                         state = state.copy(
@@ -92,12 +93,12 @@ class HomeViewmodel @Inject constructor(
                                         ).onSuccess {
                                             state = state.copy(route = it)
                                         }.onFailure {
-
+                                            state = state.copy(errorMessage = it.message ?: "Error calculating route")
                                         }
                                     }
                                 }
                             }.onFailure {
-                                //TODO: Handle error
+                                state = state.copy(errorMessage = it.message ?: "Error calculating route")
                             }
                         }
                     }
@@ -110,13 +111,17 @@ class HomeViewmodel @Inject constructor(
                         repository.deleteCar(car)
                     }
                     state = state.copy(carStatus = CarStatus.NOT_PARKED, car = null, route = null)
-                    locationJob.cancel()
+                    locationJob?.cancel()
                 }
             }
 
             is HomeEvent.PermissionResult -> {
                 state = state.copy(hasRequiredPermissions = event.isPermissionsGranted)
                 if (event.isPermissionsGranted) getCurrentLocation()
+            }
+
+            HomeEvent.ErrorSeen -> {
+                state = state.copy(errorMessage = null)
             }
         }
     }

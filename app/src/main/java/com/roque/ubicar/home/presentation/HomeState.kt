@@ -9,7 +9,8 @@ data class HomeState(
     val currentLocation: Location? = null,
     val car: Car? = null,
     val route: Route? = null,
-    val hasRequiredPermissions: Boolean = false
+    val hasRequiredPermissions: Boolean = false,
+    val errorMessage: String? = null
 )
 
 enum class CarStatus {
