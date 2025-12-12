@@ -138,4 +138,10 @@ class HomeViewmodel @Inject constructor(
             }
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        locationJob?.cancel()
+        locationService.stopLocationUpdates()
+    }
 }
