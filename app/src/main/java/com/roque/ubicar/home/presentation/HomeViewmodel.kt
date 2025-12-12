@@ -11,8 +11,10 @@ import com.roque.ubicar.home.domain.model.Car
 import com.roque.ubicar.home.domain.model.Location
 import com.roque.ubicar.home.domain.usecase.GetPathToCarUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -44,6 +46,7 @@ class HomeViewmodel @Inject constructor(
         }
     }
 
+    @OptIn(FlowPreview::class)
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.SaveCar -> {
@@ -80,36 +83,40 @@ class HomeViewmodel @Inject constructor(
                             repository.getDirections(
                                 currentLocation = currentLocation,
                                 destinationLocation = car.location
-                            ).onSuccess {
-                                state = state.copy(route = it, carStatus = CarStatus.SEARCHING)
+                            ).onSuccess { initialRoute ->
+                                state = state.copy(route = initialRoute, carStatus = CarStatus.SEARCHING)
 
-                               locationService.getLocationUpdates().collectLatest { location ->
-                                   state = state.copy(currentLocation = location)
-                                   if (state.currentLocation != null && state.route != null) {
-                                       getPathToCarUseCase(
-                                           currentLocation = state.currentLocation!!,
-                                           destinationLocation = car.location,
-                                           route = state.route!!
-                                       ).onSuccess { updatedRoute ->
-                                           state = state.copy(route = updatedRoute)
+                                val distanceToDestination = initialRoute.distance.toFloat()
 
-                                           if (updatedRoute.distance < 5) {
-                                               viewModelScope.launch {
-                                                   repository.deleteCar(car)
-                                               }
-                                               state = state.copy(
-                                                   carStatus = CarStatus.NOT_PARKED,
-                                                   car = null,
-                                                   route = null,
-                                                   errorMessage = "You've arrived at your vehicle!" //TODO: Actualizar mensaje exitoso
-                                               )
-                                               locationJob?.cancel()
-                                           }
-                                       }.onFailure { error ->
-                                           state = state.copy(errorMessage = error.message ?: "Error calculating route")
-                                       }
-                                   }
-                               }
+                                locationService.getLocationUpdates(distanceToDestination)
+                                    .debounce(500)
+                                    .collectLatest { location ->
+                                        state = state.copy(currentLocation = location)
+                                        if (state.currentLocation != null && state.route != null) {
+                                            getPathToCarUseCase(
+                                                currentLocation = state.currentLocation!!,
+                                                destinationLocation = car.location,
+                                                route = state.route!!
+                                            ).onSuccess { updatedRoute ->
+                                                state = state.copy(route = updatedRoute)
+
+                                                if (updatedRoute.distance < 5) {
+                                                    viewModelScope.launch {
+                                                        repository.deleteCar(car)
+                                                    }
+                                                    state = state.copy(
+                                                        carStatus = CarStatus.NOT_PARKED,
+                                                        car = null,
+                                                        route = null,
+                                                        errorMessage = "You've arrived at your vehicle!"
+                                                    )
+                                                    locationJob?.cancel()
+                                                }
+                                            }.onFailure { error ->
+                                                state = state.copy(errorMessage = error.message ?: "Error calculating route")
+                                            }
+                                        }
+                                    }
                             }.onFailure {
                                 state = state.copy(errorMessage = it.message ?: "Error calculating route")
                             }

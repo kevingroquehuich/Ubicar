@@ -12,7 +12,7 @@ class GetPathToCarUseCase(
 ) {
 
     companion object {
-        const val MAX_METERS = 30.0
+        const val BASE_THRESHOLD_METERS = 30.0
     }
 
     suspend operator fun invoke(
@@ -20,8 +20,16 @@ class GetPathToCarUseCase(
         destinationLocation: Location,
         route: Route
     ): Result<Route> {
+        // Dynamic threshold based on GPS accuracy
+        // If accuracy is poor, increase threshold to avoid GPS jitter recalculations
+        val threshold = if (currentLocation.accuracy < 10f) {
+            BASE_THRESHOLD_METERS
+        } else {
+            maxOf(BASE_THRESHOLD_METERS, currentLocation.accuracy * 2.0)
+        }
+
         val closestIndex = getClosestLocationIndex(currentLocation, route.polylines)
-        val isOnRoute = distanceCalculator.isLocationOnPath(route.polylines, currentLocation, MAX_METERS)
+        val isOnRoute = distanceCalculator.isLocationOnPath(route.polylines, currentLocation, threshold)
 
         return if (isOnRoute) {
             val newPolylines = route.polylines.drop(closestIndex)
