@@ -7,7 +7,8 @@ import com.roque.ubicar.feature.home.data.local.entity.CarEntity
 
 @Database(
     entities = [CarEntity::class],
-    version = 1
+    version = 2,
+    exportSchema = false
 )
 abstract class UbicarDatabase : RoomDatabase() {
     abstract val dao: HomeDao

@@ -27,8 +27,18 @@ class HomeViewModel @Inject constructor(
     init {
         startLocationUpdates()
         viewModelScope.launch {
-            repository.getParkedCar()?.let {
-                setState { copy(car = it, carStatus = CarStatus.PARKED) }
+            repository.getParkedCar()?.let { car ->
+                setState { 
+                    copy(
+                        car = car,
+                        carStatus = if (car.isSearching) CarStatus.SEARCHING else CarStatus.PARKED
+                    ) 
+                }
+                
+                // Restaurar búsqueda activa si estaba buscando
+                if (car.isSearching) {
+                    setIntent(HomeIntent.StartSearch)
+                }
             }
         }
     }
@@ -79,6 +89,11 @@ class HomeViewModel @Inject constructor(
 
     private fun handleStartSearch() {
         uiState.value.car?.let { car ->
+            // Guardar estado de búsqueda activa
+            viewModelScope.launch {
+                repository.parkCar(car.copy(isSearching = true))
+            }
+            
             locationJob?.cancel()
             locationJob = viewModelScope.launch {
                 val currentLocation = locationService.getCurrentLocation()
@@ -140,6 +155,8 @@ class HomeViewModel @Inject constructor(
     private fun handleStopSearch() {
         uiState.value.car?.let { car ->
             viewModelScope.launch {
+                // Guardar que ya no está buscando antes de eliminar
+                repository.parkCar(car.copy(isSearching = false))
                 repository.deleteCar(car)
             }
             setState { copy(carStatus = CarStatus.NOT_PARKED, car = null, route = null) }
