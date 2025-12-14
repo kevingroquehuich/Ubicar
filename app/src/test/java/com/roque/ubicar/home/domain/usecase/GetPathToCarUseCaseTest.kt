@@ -1,9 +1,10 @@
 package com.roque.ubicar.home.domain.usecase
 
-import com.roque.ubicar.home.domain.HomeRepository
-import com.roque.ubicar.home.domain.distance.DistanceCalculator
-import com.roque.ubicar.home.domain.model.Location
-import com.roque.ubicar.home.domain.model.Route
+import com.roque.ubicar.feature.home.domain.repository.HomeRepository
+import com.roque.ubicar.feature.home.domain.distance.DistanceCalculator
+import com.roque.ubicar.feature.home.domain.usecase.GetPathToCarUseCase
+import com.roque.ubicar.feature.home.domain.model.Location
+import com.roque.ubicar.feature.home.domain.model.Route
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk

@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.roque.ubicar.authentication.presentation.LoginScreen
-import com.roque.ubicar.home.presentation.HomeScreen
+import com.roque.ubicar.feature.authentication.presentation.LoginScreen
+import com.roque.ubicar.feature.home.presentation.HomeScreen
 
 @Composable
 fun NavigationHost(

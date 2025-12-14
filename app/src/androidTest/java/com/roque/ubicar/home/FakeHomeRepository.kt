@@ -1,9 +1,9 @@
 package com.roque.ubicar.home
 
-import com.roque.ubicar.home.domain.HomeRepository
-import com.roque.ubicar.home.domain.model.Car
-import com.roque.ubicar.home.domain.model.Location
-import com.roque.ubicar.home.domain.model.Route
+import com.roque.ubicar.feature.home.domain.repository.HomeRepository
+import com.roque.ubicar.feature.home.domain.model.Car
+import com.roque.ubicar.feature.home.domain.model.Location
+import com.roque.ubicar.feature.home.domain.model.Route
 
 class FakeHomeRepository : HomeRepository {
 

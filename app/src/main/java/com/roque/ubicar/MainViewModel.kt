@@ -1,8 +1,7 @@
 package com.roque.ubicar
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.roque.ubicar.authentication.domain.AuthenticationRepository
+import com.roque.ubicar.feature.authentication.domain.AuthenticationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

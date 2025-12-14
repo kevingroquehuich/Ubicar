@@ -1,7 +1,7 @@
 package com.roque.ubicar.home
 
-import com.roque.ubicar.home.domain.LocationService
-import com.roque.ubicar.home.domain.model.Location
+import com.roque.ubicar.feature.home.domain.repository.LocationService
+import com.roque.ubicar.feature.home.domain.model.Location
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
